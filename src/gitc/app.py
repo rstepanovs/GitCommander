@@ -93,18 +93,18 @@ class GitCommander:
             Exit code (0)
         """
         rules = registry._rules
-        
+
         if not rules:
             print("No plugins registered.")
             return 0
-        
+
         print("Git Commander – Registered Plugins:\n")
         print(f"{'Name':<20} {'Pattern':<30} {'Priority':<10}")
         print("-" * 60)
-        
+
         for rule in rules:
             print(f"{rule.name:<20} {rule.pattern.pattern:<30} {rule.priority:<10}")
-        
+
         print(f"\nTotal: {len(rules)} plugin(s) loaded")
         return 0
 

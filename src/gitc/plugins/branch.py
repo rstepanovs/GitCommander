@@ -46,9 +46,7 @@ def _handle_branch(m: Any, ctx: CommandContext) -> str:
     branches = _list_branches(scope)
 
     if not branches:
-        raise RuntimeError(
-            "No branches found (are you inside a git repository?)"
-        )
+        raise RuntimeError("No branches found (are you inside a git repository?)")
 
     # (value, label) tuples for dialog
     values = [(b, b) for b in branches]
@@ -89,7 +87,7 @@ def _list_branches(scope: str) -> list[str]:
         List of branch names
     """
     branches: list[str] = []
-    
+
     # Local branches
     if scope in ("local", "all"):
         cmd = [
@@ -98,14 +96,10 @@ def _list_branches(scope: str) -> list[str]:
             "--format=%(refname:short)",
             "refs/heads",
         ]
-        p = subprocess.run(
-            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
-        )
+        p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if p.returncode == 0:
-            branches.extend(
-                [line.strip() for line in p.stdout.splitlines() if line.strip()]
-            )
-    
+            branches.extend([line.strip() for line in p.stdout.splitlines() if line.strip()])
+
     # Remote branches
     if scope in ("remote", "all"):
         cmd = [
@@ -114,18 +108,14 @@ def _list_branches(scope: str) -> list[str]:
             "--format=%(refname:short)",
             "refs/remotes",
         ]
-        p = subprocess.run(
-            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
-        )
+        p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if p.returncode == 0:
-            branches.extend(
-                [line.strip() for line in p.stdout.splitlines() if line.strip()]
-            )
-    
+            branches.extend([line.strip() for line in p.stdout.splitlines() if line.strip()])
+
     # If nothing was found, report error to stderr
     if not branches:
         sys.stderr.write("No branches found (are you inside a git repository?)\n")
-    
+
     # Remove duplicates while preserving order
     seen = set()
     unique_branches: list[str] = []
@@ -133,5 +123,5 @@ def _list_branches(scope: str) -> list[str]:
         if b not in seen:
             seen.add(b)
             unique_branches.append(b)
-    
+
     return unique_branches

@@ -4,7 +4,6 @@
 
 from __future__ import annotations
 
-import re
 import textwrap
 from typing import Any
 
@@ -91,14 +90,12 @@ def test_handler_keyboardinterrupt_propagates(ctx: CommandContext) -> None:
 
 def test_autoload_file_plugin(tmp_path, ctx: CommandContext) -> None:
     # Create a temporary plugin file that registers %tmp -> 'ok'
-    plugin_code = textwrap.dedent(
-        """
+    plugin_code = textwrap.dedent("""
         def setup(reg):
             def handler(m, ctx):
                 return 'OK'
             reg.register(name='tmp-plugin', pattern=r'%tmp', handler=handler)
-        """
-    )
+        """)
 
     p = tmp_path / "tmp_plugin.py"
     p.write_text(plugin_code)
@@ -118,3 +115,43 @@ def test_builtin_qbranch_loaded(ctx: CommandContext) -> None:
     # find qbranch-picker rule
     names = [r.name for r in reg._rules]
     assert any("qbranch-picker" == n for n in names)
+
+
+def test_builtin_qfile_loaded(ctx: CommandContext) -> None:
+    reg = PluginRegistry()
+    autoload_plugins(reg, debug=False)
+
+    # find qfile-picker rule
+    names = [r.name for r in reg._rules]
+    assert any("qfile-picker" == n for n in names)
+
+
+def test_qfile_pattern_matching(ctx: CommandContext) -> None:
+    """Test qfile pattern matching with various inputs."""
+    reg = PluginRegistry()
+    autoload_plugins(reg, debug=False)
+
+    # Find the qfile-picker rule
+    qfile_rule = None
+    for rule in reg._rules:
+        if rule.name == "qfile-picker":
+            qfile_rule = rule
+            break
+
+    assert qfile_rule is not None, "qfile-picker rule not found"
+
+    # Test pattern matching
+    assert qfile_rule.pattern.fullmatch("%qfile") is not None
+    assert qfile_rule.pattern.fullmatch("%qfile:/tmp") is not None
+    assert qfile_rule.pattern.fullmatch("%qfile:src/gitc") is not None
+    assert qfile_rule.pattern.fullmatch("%notqfile") is None
+    assert qfile_rule.pattern.fullmatch("random") is None
+
+    # Test path extraction
+    m = qfile_rule.pattern.fullmatch("%qfile:/tmp/test")
+    assert m is not None
+    assert m.groupdict().get("path") == "/tmp/test"
+
+    m = qfile_rule.pattern.fullmatch("%qfile")
+    assert m is not None
+    assert m.groupdict().get("path") is None

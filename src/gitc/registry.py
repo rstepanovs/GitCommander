@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import importlib
 import importlib.util
-import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -116,12 +115,23 @@ def autoload_plugins(
     # --- 0) Built-in plugins ---
     try:
         from gitc.plugins.branch import setup as setup_branch
+
         setup_branch(reg)
         if debug:
             print("gitc: loaded built-in plugin: branch")
     except Exception as e:
         if debug:
             print(f"gitc: failed to load built-in branch plugin: {e}")
+
+    try:
+        from gitc.plugins.file import setup as setup_file
+
+        setup_file(reg)
+        if debug:
+            print("gitc: loaded built-in plugin: file")
+    except Exception as e:
+        if debug:
+            print(f"gitc: failed to load built-in file plugin: {e}")
 
     # --- 1) Entry points (separate packages) ---
     try:
@@ -130,11 +140,11 @@ def autoload_plugins(
         if hasattr(eps, "select"):
             group = eps.select(group="gitc.plugins")
         else:
-            group = eps.get("gitc.plugins", [])
+            group = eps.get("gitc.plugins", [])  # type: ignore[arg-type]
     except Exception as e:
         if debug:
             print(f"gitc: entry_points load failed: {e}")
-        group = []
+        group = []  # type: ignore[assignment]
 
     for ep in group:
         try:
