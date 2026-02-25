@@ -1,0 +1,2 @@
+[console_scripts]
+gitc = gitc.__main__:main

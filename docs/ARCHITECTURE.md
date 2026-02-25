@@ -4,7 +4,7 @@
 
 Git Commander (gitc) is a pluggable command-line preprocessor for Git.
 
-It intercepts command-line arguments, expands special tokens (e.g. `%branch`),
+It intercepts command-line arguments, expands special tokens (e.g. `%qbranch`),
 and then executes the resulting `git` command.
 
 ---
@@ -13,7 +13,7 @@ and then executes the resulting `git` command.
 
 1. User runs:
 
-   gitc checkout %branch
+    gitc checkout %qbranch
 
 2. Engine parses argv
 3. PluginRegistry scans arguments
@@ -60,8 +60,8 @@ Example:
 
 ```python
 reg.register(
-    name="branch-picker",
-    pattern=r"%branch",
+    name="qbranch-picker",
+    pattern=r"%qbranch(?:\:(?P<scope>local|remote))?",
     handler=handle_branch,
     priority=10,
 )

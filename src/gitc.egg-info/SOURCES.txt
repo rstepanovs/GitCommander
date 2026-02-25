@@ -1,0 +1,17 @@
+LICENSE
+README.md
+pyproject.toml
+src/gitc/__init__.py
+src/gitc/__main__.py
+src/gitc/app.py
+src/gitc/context.py
+src/gitc/registry.py
+src/gitc.egg-info/PKG-INFO
+src/gitc.egg-info/SOURCES.txt
+src/gitc.egg-info/dependency_links.txt
+src/gitc.egg-info/entry_points.txt
+src/gitc.egg-info/requires.txt
+src/gitc.egg-info/top_level.txt
+src/gitc/plugins/__init__.py
+src/gitc/plugins/branch.py
+tests/test_registry.py

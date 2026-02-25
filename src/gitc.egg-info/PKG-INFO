@@ -1,0 +1,22 @@
+Metadata-Version: 2.4
+Name: gitc
+Version: 0.1.0
+Summary: Git Commander: pluggable git wrapper with interactive token expansion
+Author-email: Roman Stepanov <roman@example.com>
+License: MIT
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: prompt_toolkit>=3.0.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0.0; extra == "dev"
+Requires-Dist: mypy>=1.0.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"
+Requires-Dist: ruff>=0.1.0; extra == "dev"
+Dynamic: license-file
+
+## Git Commander
+
+An extendable wrapper for git command to add extra functionality and tools.
+ 
